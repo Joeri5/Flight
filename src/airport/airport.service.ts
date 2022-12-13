@@ -3,10 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateAirportDto } from './dto';
+import { CreateAirportDto, UpdateAirportDto } from './dto';
 import { Airport } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { UpdateAirportDto } from './dto/update-airport.dto';
 
 @Injectable()
 export class AirportService {

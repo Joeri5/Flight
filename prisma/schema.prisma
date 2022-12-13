@@ -11,17 +11,33 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  fistName String @map("first_name")
-  lastName String @map("last_name")
+  id        Int    @id @default(autoincrement())
+  email     String @unique
+  password  String
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
 
   createdAt DateTime    @default(now()) @map("created_at")
   updatedAt DateTime    @updatedAt @map("updated_at")
   Passenger Passenger[]
+  Session   Session[]
 
   @@map("users")
+}
+
+model Session {
+  id String @id @default(cuid())
+
+  accessToken  String? @unique @map("access_token")
+  refreshToken String? @unique @map("refresh_token")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("sessions")
 }
 
 model Passenger {

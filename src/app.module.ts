@@ -9,6 +9,8 @@ import { PassengerModule } from './passenger/passenger.module';
 import { AirportController } from './airport/airport.controller';
 import { AirportService } from './airport/airport.service';
 import { AirportModule } from './airport/airport.module';
+import { AuthModule } from './auth/auth.module';
+import { SessionModule } from './session/session.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { AirportModule } from './airport/airport.module';
     UserModule,
     PassengerModule,
     AirportModule,
+    AuthModule,
+    SessionModule,
   ],
   controllers: [AirportController],
   providers: [AirportService],
