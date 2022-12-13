@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  fistName String @map("first_name")
+  lastName String @map("last_name")
+
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  Passenger Passenger[]
+
+  @@map("users")
+}
+
+model Passenger {
+  id Int @id @default(autoincrement())
+
+  flightId String @map("flight_id")
+  flight   Flight @relation(fields: [flightId], references: [flightNo])
+  seatNo   String @map("seat_no")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  Booking   Booking[]
+
+  @@map("passengers")
+}
+
+model Airline {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  logo String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  flights Flight[]
+
+  @@map("airlines")
+}
+
+model Booking {
+  id Int @id @default(autoincrement())
+
+  flightId String @map("flight_id")
+  flight   Flight @relation(fields: [flightId], references: [flightNo])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  passengerId Int       @map("passenger_id")
+  passenger   Passenger @relation(fields: [passengerId], references: [id])
+
+  @@map("bookings")
+}
+
+model Flight {
+  flightNo         String    @id @unique @map("flight_no")
+  origin           String
+  originGate       String?   @map("origin_gate")
+  destination      String
+  destinationGate  String?   @map("destination_gate")
+  departure        DateTime
+  delayedDeparture DateTime? @map("delayed_departure")
+  arrival          DateTime
+  delayedArrival   DateTime? @map("delayed_arrival")
+
+  availableSeats Int     @map("available_seats")
+  airlineId      Int     @map("airline_id")
+  airline        Airline @relation(fields: [airlineId], references: [id])
+
+  bookings  Booking[]
+  Passenger Passenger[]
+
+  Airport            Airport? @relation(fields: [airportAirportCode], references: [airportCode])
+  airportAirportCode String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("flights")
+}
+
+model Airport {
+  airportCode String @id @unique @map("airport_code")
+  location    String @unique
+  name        String @unique
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  flights Flight[]
+
+  @@map("airports")
+}
